@@ -1,27 +1,21 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsLogedIn } from '../redux/slices/todoDataSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
 
   const { isLogedIn, userName } = useSelector((state) => state.todos)
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    fetch("http://localhost:8000/user/logout", {
-      method: "POST",
-      credentials: 'include',
-    }).then((response) => {
-      return response.json();
-    }).then((response) => {
-      console.log(response);
-      if (response.status === 'success') {
-        dispatch(setIsLogedIn(false));
-      }
-    }).catch((error) => {
-      console.log(error.message);
-    })
+    if(localStorage.getItem('token')){
+      localStorage.removeItem("token");
+      dispatch(setIsLogedIn(false));
+      navigate("/login");
+    }
   }
 
 

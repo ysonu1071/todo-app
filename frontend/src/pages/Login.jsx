@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom'
 import { useDispatch } from 'react-redux';
-import Header from '../components/header'
+import Header from '../components/Header';
 import {setIsLogedIn, setUserName} from "../redux/slices/todoDataSlice";
 
 function Login() {
@@ -20,6 +20,7 @@ function Login() {
         }
 
         fetch("http://localhost:8000/user/login", {
+        // fetch("https://todo-app-backend-pqy0.onrender.com/user/login", {
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },
@@ -32,6 +33,7 @@ function Login() {
                 console.log(response.message);
                 dispatch(setIsLogedIn(true));
                 dispatch(setUserName(response.data.name));
+                localStorage.setItem("token", response.token);
                 navigate("/");
             }else{
                 toast.error(response.message);

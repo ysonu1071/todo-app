@@ -42,8 +42,9 @@ const loginUser = async(req, res) => {
 
         let token = JWT.sign({name: user[0].name, email: user[0].email, id: user[0]._id}, SECRATE_KEY);
 
-        res.cookie("token", token, {httpOnly: true, maxAge: 86400000});
-        return res.status(200).json({status:"success", message:"Login successfull", data:{name: user[0].name}});
+        // res.cookie("token", token, {httpOnly: true, maxAge: 86400000});
+
+        return res.status(200).json({status:"success", message:"Login successfull", data:{name: user[0].name}, token: token});
 
     } catch (error) {
         console.log(error.message);
@@ -51,10 +52,5 @@ const loginUser = async(req, res) => {
     }
 }
 
-const logoutUser = async(req, res) => {
-    res.clearCookie("token");
-    return res.status(200).json({status: "success", message:"User logedout seccessfully"})
-}
 
-
-module.exports = {registerUser, loginUser, logoutUser};
+module.exports = {registerUser, loginUser};

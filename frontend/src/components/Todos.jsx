@@ -18,6 +18,7 @@ function Todos({ todo, showTodos, handleDeleteBox }) {
 
     const handleComplete = (id) => {
         fetch("http://localhost:8000/todo/complete", {
+        // fetch("https://todo-app-backend-pqy0.onrender.com/todo/complete", {
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },
@@ -45,6 +46,7 @@ function Todos({ todo, showTodos, handleDeleteBox }) {
 
     const handleUncomplete = (id) => {
         fetch("http://localhost:8000/todo/complete", {
+        // fetch("https://todo-app-backend-pqy0.onrender.com/todo/complete", {
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },
@@ -79,6 +81,7 @@ function Todos({ todo, showTodos, handleDeleteBox }) {
         }
 
         fetch("http://localhost:8000/todo/update", {
+        // fetch("https://todo-app-backend-pqy0.onrender.com/todo/update", {
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },

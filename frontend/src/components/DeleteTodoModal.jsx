@@ -9,6 +9,7 @@ function DeleteTodoModal({ todo, handleDeleteBox }) {
 
   const handleDeleteTodo = () => {
     fetch("http://localhost:8000/todo/delete", {
+    // fetch("https://todo-app-backend-pqy0.onrender.com/todo/delete", {
       method: "POST",
       credentials: 'include',
       headers: { "Content-Type": "application/json" },

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import {useNavigate} from 'react-router-dom'
-import Header from '../components/header'
+import Header from '../components/Header';
 function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -16,6 +16,7 @@ function Register() {
         }
 
         fetch("http://localhost:8000/user/register", {
+        // fetch("https://todo-app-backend-pqy0.onrender.com/user/register", {
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Header from '../components/header'
+import Header from '../components/Header';
 import Todos from '../components/Todos'
 import toast, { Toaster } from 'react-hot-toast';
 import DeleteTodoModal from '../components/DeleteTodoModal'
@@ -27,10 +27,18 @@ function Home() {
       return;
     }
 
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+      return;
+    }
+
+    let token = localStorage.getItem("token");
+  
     fetch("http://localhost:8000/todo/add", {
+      // fetch("https://todo-app-backend-pqy0.onrender.com/todo/add", {
       method: "POST",
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', "Authorization": `Bearer ${token}` },
       body: JSON.stringify({ todo: text })
     }).then((response) => {
       return response.json();
@@ -72,17 +80,30 @@ function Home() {
   }
 
   const fetchAllTodo = () => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+      return;
+    }
+
+    let token = localStorage.getItem("token");
+
     fetch("http://localhost:8000/todo/", {
+      // fetch("https://todo-app-backend-pqy0.onrender.com/todo/", {
       method: "GET",
       credentials: "include",
+      headers: { "Authorization": `Bearer ${token}` }
     }).then((response) => {
       return response.json();
     }).then((response) => {
       if (response.status === 'fail') {
         if (response.message === "Token is not found!" || response.message === "Wrong token found!") {
+          console.log(response.message)
+
           navigate("/login");
         } else {
           toast.error(response.message);
+          console.log(response.message)
+
         }
       } else {
         dispatch(setAllTodos(response.data));
@@ -106,7 +127,7 @@ function Home() {
 
   useEffect(() => {
     fetchAllTodo();
-  }, [isLogedIn]);
+  }, []);
 
   useEffect(() => {
     handleFilterdTodo();
@@ -131,7 +152,7 @@ function Home() {
             <button className={'px-4 py-2 ' + (showCompletedTodos ? 'border-b-2 border-blue-400' : "")} onClick={handleCompltedTodo}>Completed Todos</button>
           </div>
 
-          {filterdTodo.length == 0 ? showCompletedTodos ? <p className='w-full text-center text-xl text-gray-500/50 mt-6'>You don't have any completed Todo yet.</p>: <p className='w-full text-center text-xl text-gray-500/50 mt-6'>You don't have any Todo yet.</p> : filterdTodo.map((todo) => <Todos key={todo._id} todo={todo} showTodos={showTodos} handleDeleteBox={handleDeleteBox} />)}
+          {filterdTodo.length == 0 ? showCompletedTodos ? <p className='w-full text-center text-xl text-gray-500/50 mt-6'>You don't have any completed Todo yet.</p> : <p className='w-full text-center text-xl text-gray-500/50 mt-6'>You don't have any Todo yet.</p> : filterdTodo.map((todo) => <Todos key={todo._id} todo={todo} showTodos={showTodos} handleDeleteBox={handleDeleteBox} />)}
 
 
         </div>

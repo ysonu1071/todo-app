@@ -1,13 +1,12 @@
 const TodoModel = require("../models/todoModel");
 const JWT = require("jsonwebtoken");
 
-let SECRATE_KEY = "sonu1234";
 
 const getAllTodo = async (req, res) => {
     let user = req.verifiedToken;
     try {
         let allTodo = await TodoModel.find({ createdBy: user.id });
-        return res.status(200).json({ status: 'success', message: "All todo fetched successfylly", data: allTodo, userName:user.name });
+        return res.status(200).json({ status: 'success', message: "All todo fetched successfylly", data: allTodo, userName: user.name });
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ status: "fail", message: error.message });
@@ -15,11 +14,14 @@ const getAllTodo = async (req, res) => {
 }
 
 const addTodo = async (req, res) => {
-    let token = req.cookies?.token;
+    // let token = req.cookies?.token;
     let todo = req.body.todo;
 
     try {
-        let user = JWT.verify(token, SECRATE_KEY);
+        let bearerToken = req.header("Authorization");
+        let token = bearerToken.trim().split(" ")[1];
+        
+        let user = JWT.verify(token, process.env['SECRATE_KEY']);
         let addedTodo = await TodoModel.create({ todo, createdBy: user.id });
 
         return res.status(201).json({ status: "success", message: "Todo added successfully", data: addedTodo });
@@ -33,13 +35,13 @@ const addTodo = async (req, res) => {
 const updateTodo = async (req, res) => {
     let { id, todo } = req.body;
     try {
-        let updatedTodo = await TodoModel.findByIdAndUpdate({ _id: id }, {todo});
-        
+        let updatedTodo = await TodoModel.findByIdAndUpdate({ _id: id }, { todo });
+
         return res.status(200).json({ status: "success", message: "Todo updated successfully" })
-        
+
     } catch (error) {
         return res.status(500).json({ status: "fail", message: error.message });
-    }   
+    }
 }
 
 const completeTodo = async (req, res) => {
@@ -60,7 +62,7 @@ const deleteTodo = async (req, res) => {
     let { id } = req.body;
     try {
         let deleteTodo = await TodoModel.findByIdAndDelete({ _id: id });
-    
+
         return res.status(200).json({ status: "success", message: "Todo deleted successfully" })
     } catch (error) {
         return res.status(500).json({ status: "fail", message: error.message });
